@@ -9,9 +9,9 @@ const Content = ({
 }) => {
   return (
     <div>  
-      <p>{part1} {exercises1}</p>
-      <p>{part2} {exercises2}</p>
-      <p>{part3} {exercises3}</p>
+      <Part part={part1} exercises={exercises1}/>
+      <Part part={part2} exercises={exercises2}/>
+      <Part part={part3} exercises={exercises3}/>
     </div>
   );
 };
@@ -23,6 +23,16 @@ const Total = ({
 
   return (
     <p>Number of exercises {total}</p>
+  );
+};
+
+const Part = ({
+  part, exercises
+}) => {
+  return (
+    <div>
+      <p>{part} {exercises}</p>
+    </div>
   );
 };
 
