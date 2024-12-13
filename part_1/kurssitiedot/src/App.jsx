@@ -1,6 +1,6 @@
-const Header = ({ course }) => {
-  return <h1>{course}</h1>;
-};
+const Header = ({ course }) => <h1>{course}</h1>
+
+const Part = ({ partname, exercise }) =>  <div>{partname} {exercise}</div>
 
 const Content = ({ parts }) => {
   return (
@@ -20,14 +20,6 @@ const Total = ({ parts }) => {
 
   return (
     <p>Number of exercises {total}</p>
-  );
-};
-
-const Part = ({ partname, exercise }) => {
-  return (
-    <div>
-      <p>{partname} {exercise}</p>
-    </div>
   );
 };
 
