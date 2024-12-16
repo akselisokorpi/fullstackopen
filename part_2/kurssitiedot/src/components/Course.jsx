@@ -1,22 +1,24 @@
-const Part = ({ name, exercise }) => <div>{name} {exercise}</div>
+import React from 'react'
 
-const Header = ({ course }) => <h1>{course.name}</h1>
+const Part = props => <div>{props.name} {props.exercises}</div>
 
-const Content = ({ parts }) => {
+const Header = ( props ) => <h1>{props.course.name}</h1>
+
+const Content = ( props ) => {
     return (
         <div>
-            {parts.map((part, index) => (
-                <Part key={index} name={part.name} exercise={part.exercises} />
-            ))}
+            {props.parts.map(part => 
+                <Part key={part.id} name={part.name} exercises={part.exercises} />
+            )}
         </div>
     );
 };
 
-const Course = ({ course }) => {
+const Course = ( props ) => {
     return (
         <div>
-            <Header course={course} />
-            <Content parts={course.parts} />
+            <Header course={props.course} />
+            <Content parts={props.course.parts} />
         </div>
     )
 }
