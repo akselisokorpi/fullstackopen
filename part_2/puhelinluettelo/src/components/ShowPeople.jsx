@@ -8,10 +8,14 @@ const OutputPeople = ({ name, number }) => {
     );
 };
 
-const ShowPeople = ( props ) => {
+const ShowPeople = ({ persons, filter }) => {
+    const filteredPersons = persons.filter(person => 
+        person.name.toUpperCase().includes(filter.toUpperCase())
+    );
+
     return (
         <div>
-            {props.persons.map(person => 
+            {filteredPersons.map(person => 
                 <OutputPeople key={person.name} name={person.name} number={person.number} />
             )}
         </div>
