@@ -9,7 +9,7 @@ const Total = ( props ) => {
 
     return (
         <div>
-            <h3>Total of {parts.reduce( (s, p) => s + p )} exercises</h3>
+            <h3>Total of {parts.reduce( (s, p) => s + p, 0 )} exercises</h3>
         </div>
     )
 }
