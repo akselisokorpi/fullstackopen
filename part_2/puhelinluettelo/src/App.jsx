@@ -17,17 +17,14 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('');
 
   const handleFiltering = ( event ) => {
-    console.log(event.target.value);
     setNewFilter(event.target.value);
   }
 
   const handleNewNumber = ( event ) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
   const handleNewPerson = ( event ) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
@@ -35,7 +32,7 @@ const App = () => {
     console.log({newName, newNumber})
 
     if (checkDoppelGangers({ persons, newName })) {
-      Notification( {newName});
+      Notification( {newName} );
       setNewNumber('');
       setNewName('');
       return;
