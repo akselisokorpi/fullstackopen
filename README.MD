@@ -5,6 +5,14 @@
 * cd partname
 * npm install
 
+# JSON Server
+First dependencies:
+* npm install axios
+* npm install json-server --save-dev
+Then run server:
+* npm run server (default port: 3000)
+* https://localhost:3001/
+
 # Start application
 * npm run dev
 * Vite starts the application by default on port 5173
