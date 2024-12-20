@@ -5,6 +5,7 @@ import checkDoppelGangers from './components/CheckPersons'
 import Notification from './components/Notification';
 import FilterPerson from './components/FilterPerson';
 import AddPerson from './components/AddPerson';
+import PersonServices from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,34 +14,32 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('');
 
   useEffect(() => {
-    console.log('effect');
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled');
         setPersons(response.data);
       })
   }, []);
-  console.log('render', persons.length, 'persons');
 
+  
   const handleFiltering = ( event ) => {
     console.log(event.target.value);
     setNewFilter(event.target.value);
   }
-
+  
   const handleNewNumber = ( event ) => {
     console.log(event.target.value);
     setNewNumber(event.target.value);
   };
-
+  
   const handleNewPerson = ( event ) => {
     console.log(event.target.value);
     setNewName(event.target.value);
   };
-
+  
   const addNewPersonToArray = () => { 
     console.log({newName, newNumber})
-
+    
     if (checkDoppelGangers({ persons, newName })) {
       Notification( {newName});
       setNewNumber('');
@@ -48,19 +47,36 @@ const App = () => {
       return;
     }
     const newPerson = { name: newName, number: newNumber };
-    setPersons(persons.concat(newPerson));
-
+    
+    // Add new persons to server
+    PersonServices
+    .create(newPerson)
+    .then(newPerson => {
+      setPersons(persons.concat(newPerson))
+    })
+    
     // Reset the input fields
     setNewName('');
     setNewNumber('');
   };
 
+  const handleDelete = ( id ) => {
+    const person = persons.find(person => person.id === id);
+    if (window.confirm(`Delete ${person.name}?`)) {
+      PersonServices
+        .deleteObject(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+      });
+    }
+  };
+  
   return (
     <div>
       <h2>Phonebook</h2>
       <FilterPerson 
         newFilter={newFilter} 
-        handleFiltering={handleFiltering} 
+        handleFiltering={handleFiltering}
       />
       <h2>Add a new person</h2>
       <AddPerson
@@ -74,9 +90,10 @@ const App = () => {
       <ShowPeople 
         persons={persons} 
         filter={newFilter}
+        handleDelete={handleDelete}
       />
     </div>
   );
 };
 
-export default App
+export default App  
