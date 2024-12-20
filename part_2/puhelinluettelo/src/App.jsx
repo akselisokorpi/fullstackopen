@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import ShowPeople from './components/ShowPeople'
-import checkDoppelGangers from './components/CheckPersons'
 import Notification from './components/Notification';
 import FilterPerson from './components/FilterPerson';
 import AddPerson from './components/AddPerson';
 import PersonServices from './services/persons';
+import CheckDuplicates from './components/CheckPersons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -38,26 +38,34 @@ const App = () => {
   };
   
   const addNewPersonToArray = () => { 
-    console.log({newName, newNumber})
-    
-    if (checkDoppelGangers({ persons, newName })) {
-      Notification( {newName});
-      setNewNumber('');
-      setNewName('');
-      return;
+    const existingPerson = persons.find(person => person.name === newName);
+
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+
+          PersonServices
+            .update( existingPerson.id, updatedPerson)
+            .then(returnedPerson => {
+              setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson));
+              setNewName('');
+              setNewNumber('');
+            })
+        } else {
+          // Don't replace old number, do nothing
+          setNewName('');
+          setNewNumber('');
+          return;
+        }
+      } else {
+        const newPerson = { name: newName, number: newNumber };
+
+        PersonServices
+          .create(newPerson)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson))
+          });
     }
-    const newPerson = { name: newName, number: newNumber };
-    
-    // Add new persons to server
-    PersonServices
-    .create(newPerson)
-    .then(newPerson => {
-      setPersons(persons.concat(newPerson))
-    })
-    
-    // Reset the input fields
-    setNewName('');
-    setNewNumber('');
   };
 
   const handleDelete = ( id ) => {
