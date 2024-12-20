@@ -1,8 +1,9 @@
 import React from 'react'
 
-const OutputPeople = ({ name, number }) => {
+const OutputPeople = ({ name, number, handleDelete }) => {
     return (
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '500px'}}>
+            <button onClick={handleDelete}>delete</button>
             <div>{name} {number}</div>
         </div>
     );
@@ -16,13 +17,15 @@ const ShowPeople = ({ persons, filter, handleDelete }) => {
     return (
         <div>
             {filteredPersons.map(person => 
-                <div key={person.name}>
-                    <OutputPeople name={person.name} number={person.number}/>
-                    <button onClick={() => handleDelete(person.id)}>delete</button>
-                </div>
+                <OutputPeople
+                    key={person.name}
+                    name={person.name}
+                    number={person.number}
+                    handleDelete={() => handleDelete(person.id)}
+                >/</OutputPeople>
             )}
         </div>
     );
 };
 
-export default ShowPeople
+export default ShowPeople;
