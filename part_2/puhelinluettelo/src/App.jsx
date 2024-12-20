@@ -1,58 +1,93 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios';
 import ShowPeople from './components/ShowPeople'
-import checkDoppelGangers from './components/CheckPersons'
-import Notification from './components/Notification';
 import FilterPerson from './components/FilterPerson';
 import AddPerson from './components/AddPerson';
+import PersonServices from './services/persons';
+
+const baseURL = 'http://localhost:3001/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
 
+  useEffect(() => {
+    axios
+      .get(baseURL)
+      .then(response => {
+        setPersons(response.data);
+      })
+  }, []);
+
+  
   const handleFiltering = ( event ) => {
     setNewFilter(event.target.value);
   }
-
+  
   const handleNewNumber = ( event ) => {
     setNewNumber(event.target.value);
   };
-
+  
   const handleNewPerson = ( event ) => {
     setNewName(event.target.value);
   };
+  
+  const addNewPersonToArray = () => { 
+    const existingPerson = persons.find(person => person.name === newName);
 
-  const addNewPersonToArray = () => {
-    console.log({newName, newNumber})
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
 
-    if (checkDoppelGangers({ persons, newName })) {
-      Notification( {newName} );
-      setNewNumber('');
-      setNewName('');
-      return;
+          PersonServices
+            .update( existingPerson.id, updatedPerson)
+            .then(returnedPerson => {
+              setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson));
+              setNewName('');
+              setNewNumber('');
+            })
+        } else {
+          // Don't replace old number, do nothing
+          setNewName('');
+          setNewNumber('');
+          return;
+        }
+      } else {
+        const newPerson = { name: newName, number: newNumber };
+
+        PersonServices
+          .create(newPerson)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson))
+          });
+          setNewName('');
+          setNewNumber('');
     }
-    const newPerson = { name: newName, number: newNumber };
-    setPersons([...persons, newPerson]);
-    setNewName('');
-    setNewNumber('');
   };
 
+  const handleDelete = ( id ) => {
+    const person = persons.find(person => person.id === id);
+    if (window.confirm(`Delete ${person.name}?`)) {
+      PersonServices
+        .deleteObject(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+      });
+    }
+  };
+  
   return (
     <div>
       <h2>Phonebook</h2>
       <FilterPerson 
         newFilter={newFilter} 
-        handleFiltering={handleFiltering} 
+        handleFiltering={handleFiltering}
       />
       <h2>Add a new person</h2>
       <AddPerson
-        newFilter={newName}
+        newName={newName}
         newNumber={newNumber}
         handleNewPerson={handleNewPerson}
         handleNewNumber={handleNewNumber}
@@ -62,9 +97,10 @@ const App = () => {
       <ShowPeople 
         persons={persons} 
         filter={newFilter}
+        handleDelete={handleDelete}
       />
     </div>
   );
 };
 
-export default App
+export default App  

@@ -1,7 +1,7 @@
 
 const Notification = ({ newName }) => {
     return (
-        window.alert(`${newName} is already added to phonebook`)
+        window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
     );
 };
 

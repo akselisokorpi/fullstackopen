@@ -8,7 +8,7 @@ const OutputPeople = ({ name, number }) => {
     );
 };
 
-const ShowPeople = ({ persons, filter }) => {
+const ShowPeople = ({ persons, filter, handleDelete }) => {
     const filteredPersons = persons.filter(person => 
         person.name.toUpperCase().includes(filter.toUpperCase())
     );
@@ -16,7 +16,10 @@ const ShowPeople = ({ persons, filter }) => {
     return (
         <div>
             {filteredPersons.map(person => 
-                <OutputPeople key={person.name} name={person.name} number={person.number} />
+                <div key={person.name}>
+                    <OutputPeople name={person.name} number={person.number}/>
+                    <button onClick={() => handleDelete(person.id)}>delete</button>
+                </div>
             )}
         </div>
     );
