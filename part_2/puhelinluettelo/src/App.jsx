@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios';
 import ShowPeople from './components/ShowPeople'
 import checkDoppelGangers from './components/CheckPersons'
 import Notification from './components/Notification';
@@ -6,15 +7,21 @@ import FilterPerson from './components/FilterPerson';
 import AddPerson from './components/AddPerson';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
+
+  useEffect(() => {
+    console.log('effect');
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled');
+        setPersons(response.data);
+      })
+  }, []);
+  console.log('render', persons.length, 'persons');
 
   const handleFiltering = ( event ) => {
     console.log(event.target.value);
@@ -31,7 +38,7 @@ const App = () => {
     setNewName(event.target.value);
   };
 
-  const addNewPersonToArray = () => {
+  const addNewPersonToArray = () => { 
     console.log({newName, newNumber})
 
     if (checkDoppelGangers({ persons, newName })) {
@@ -41,7 +48,9 @@ const App = () => {
       return;
     }
     const newPerson = { name: newName, number: newNumber };
-    setPersons([...persons, newPerson]);
+    setPersons(persons.concat(newPerson));
+
+    // Reset the input fields
     setNewName('');
     setNewNumber('');
   };
@@ -55,7 +64,7 @@ const App = () => {
       />
       <h2>Add a new person</h2>
       <AddPerson
-        newFilter={newName}
+        newName={newName}
         newNumber={newNumber}
         handleNewPerson={handleNewPerson}
         handleNewNumber={handleNewNumber}
