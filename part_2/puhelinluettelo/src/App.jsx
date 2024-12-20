@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import ShowPeople from './components/ShowPeople'
-import Notification from './components/Notification';
 import FilterPerson from './components/FilterPerson';
 import AddPerson from './components/AddPerson';
 import PersonServices from './services/persons';
-import CheckDuplicates from './components/CheckPersons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -65,6 +63,8 @@ const App = () => {
           .then(newPerson => {
             setPersons(persons.concat(newPerson))
           });
+          setNewName('');
+          setNewNumber('');
     }
   };
 
