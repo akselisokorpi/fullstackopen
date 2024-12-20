@@ -5,6 +5,8 @@ import FilterPerson from './components/FilterPerson';
 import AddPerson from './components/AddPerson';
 import PersonServices from './services/persons';
 
+const baseURL = 'http://localhost:3001/persons'
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
@@ -13,7 +15,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3001/persons')
+      .get(baseURL)
       .then(response => {
         setPersons(response.data);
       })
