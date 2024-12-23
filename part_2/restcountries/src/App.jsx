@@ -21,13 +21,15 @@ const GetFlag = ({ country }) => {
   );
 }
 
-const DisplayCountries = ({ filteredCountries }) => {
-
+const DisplayCountries = ({ filteredCountries, handleShowCountry }) => {
   if (filteredCountries.length < 10 && filteredCountries.length > 1) {
     return (
       <div>
           {filteredCountries.map(country => 
-            <p key={country.name.common}>{country.name.common}</p>
+            <p key={country.name.common}>
+              {country.name.common}
+              <button type="submit" onClick={() => handleShowCountry(country)}>show</button>
+            </p>
           )}
       </div>
     )
@@ -62,9 +64,11 @@ const DisplayCountries = ({ filteredCountries }) => {
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [newCountry, setNewCountry] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   const handleNewCountry = ( event ) => {
     setNewCountry(event.target.value);
+    setSelectedCountry(null);
   };
 
   const onSearch = ( event ) => {
@@ -80,6 +84,10 @@ const App = () => {
       });
   };
 
+  const handleShowCountry = ( country ) => {
+    setSelectedCountry(country);
+  };
+
   const filteredCountries = countries.filter(country => 
     country.name.common.toLowerCase().includes(newCountry.toLowerCase())
   );
@@ -92,7 +100,22 @@ const App = () => {
         onSearch={onSearch}
       />
       <div>
-      <DisplayCountries filteredCountries={filteredCountries} />
+        {selectedCountry ? (
+          <div>
+            <h2>{selectedCountry.name.common}</h2>
+            <p>Capital: {selectedCountry.capital}</p>
+            <p>Area: {selectedCountry.area}</p>
+            <h3>Languages:</h3>
+            <ul>
+              {Object.values(selectedCountry.languages).map((language, index) => (
+                <li key={index}>{language}</li>
+              ))}
+            </ul>
+            <GetFlag country={selectedCountry} />
+          </div>
+        ) : (
+          <DisplayCountries filteredCountries={filteredCountries} handleShowCountry={handleShowCountry}/>
+        )}
       </div>
     </div>
   );
