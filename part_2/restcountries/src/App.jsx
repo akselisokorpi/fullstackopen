@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios'
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const ListCountries = ( props ) => {
   return (
@@ -22,7 +25,7 @@ const GetFlag = ({ country }) => {
 }
 
 const DisplayCountries = ({ filteredCountries, handleShowCountry }) => {
-  if (filteredCountries.length < 10 && filteredCountries.length > 1) {
+  if (filteredCountries.length < 15 && filteredCountries.length > 1) {
     return (
       <div>
           {filteredCountries.map(country => 
