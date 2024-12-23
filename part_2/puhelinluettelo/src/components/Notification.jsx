@@ -1,7 +1,14 @@
+import React from 'react'
 
-const Notification = ({ newName }) => {
+const Notification = ({ message }) => {
+    if (message === null) {
+        return null
+    }
+
     return (
-        window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+        <div className='notification'>
+            {message}
+        </div>
     );
 };
 
