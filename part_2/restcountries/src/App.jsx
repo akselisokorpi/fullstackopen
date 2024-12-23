@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios'
-import dotenv from 'dotenv';
 
-dotenv.config();
 
 const ListCountries = ( props ) => {
   return (
@@ -51,6 +49,9 @@ const DisplayCountries = ({ filteredCountries, handleShowCountry }) => {
                 ))}
                 </ul>
               <GetFlag country={country}/>
+              <Weather capital={country.capital} latlng={country.capitalInfo.latlng} />
+              <h2>Weather in {country.capital}</h2>
+
             </div>
           )}
       </div>
@@ -62,6 +63,37 @@ const DisplayCountries = ({ filteredCountries, handleShowCountry }) => {
       </div>
     )
   }
+}
+
+const Weather = ({ capital, latlng }) => {
+  const [weather, setWeather] = useState(null);
+
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_REACT_APP_WEATHER_API_KEY;
+    const [latitude, longitude] = latlng;
+
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
+      .then(response => {
+        setWeather(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching weather data', error);
+      });
+  }, [capital, latlng]);
+
+  if (!weather) {
+    return <div>Loading weather...</div>;
+  }
+
+  return (
+    <div>
+      <h3>Weather in {capital}</h3>
+      <p>Temperature: {weather.current.temp} °C</p>
+
+      <p>Wind: {weather.current.wind_speed} m/s</p>
+    </div>
+  )
 }
 
 const App = () => {
@@ -115,6 +147,7 @@ const App = () => {
               ))}
             </ul>
             <GetFlag country={selectedCountry} />
+            <Weather capital={selectedCountry.capital} />
           </div>
         ) : (
           <DisplayCountries filteredCountries={filteredCountries} handleShowCountry={handleShowCountry}/>
