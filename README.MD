@@ -17,7 +17,7 @@ Then run server:
 ```
 npm run server
 ```
-The server should now be up and runnings at: https://localhost:3001/
+The server should now be up and running at: https://localhost:3001/
 
 # Start application
 ```
