@@ -7,7 +7,8 @@ import PersonServices from './services/persons';
 import Notification from './components/Notification';
 import ErrorNotif from './components/ErrorNotif';
 
-const baseUrl = 'http://localhost:3001/persons'
+// const baseUrl = 'http://localhost:3001/api/persons'
+const baseUrl = 'https://supreme-enigma-3pxn.onrender.com/api/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
