@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf dist && cd ../fullstackopen/part_2/puhelinluettelo && npm run build && cp -r dist ../../../fullstackpt3/",
+    "build:ui": "rm -rf dist && cd ../part_2/puhelinluettelo/puhelinluettelo-front/ && npm run build && cp -r dist ../../../part_3/",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "author": "Akseli Isokorpi",
