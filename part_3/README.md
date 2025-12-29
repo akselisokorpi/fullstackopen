@@ -1,4 +1,2 @@
-# Supreme-enigma
-
-## URL
-https://supreme-enigma-3pxn.onrender.com/
+## Available at:
+https://fullstackopen-839t.onrender.com
