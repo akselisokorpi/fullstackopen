@@ -6,18 +6,12 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2]
-
-// const url = `mongodb+srv://fullstack:${password}@cluster0.a5qfl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-// const url = `mongodb+srv://fullstack:${password}@cluster0.a5qfl.mongodb.net/noteApp?retryWrites=true&w=majority&appName=Cluster0`
 const url = `mongodb+srv://aksuisokorpi_db_user:${password}@fsocluster.ytcho3v.mongodb.net/phonebookApp?appName=FSOCluster`
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url, { family: 4 })
 
-const generateId = () => String(Math.floor(Math.random() * 1000));
-
 const personSchema = new mongoose.Schema({
-  id: Number,
   name: String,
   number: String
 })
@@ -30,7 +24,6 @@ if (process.argv.length > 3) {
         const number = process.argv[4]
     
         const person = new Person({
-            id: generateId(),
             name: name,
             number: number,
         })
@@ -55,13 +48,3 @@ if (process.argv.length > 3) {
             mongoose.connection.close()
         })
 }
-
-// const person = new Person({
-//   name: "Arto Hellas",
-//   number: "040-123456",
-// })
-
-// person.save().then(result => {
-//   console.log('person saved!')
-//   mongoose.connection.close()
-// })
